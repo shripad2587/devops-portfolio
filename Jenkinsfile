@@ -49,11 +49,9 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-
                 sh '''
                 docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                 '''
-
             }
         }
 
@@ -81,35 +79,41 @@ pipeline {
 
         stage('Tag Image') {
             steps {
-
                 sh '''
                 docker tag \
                 ${IMAGE_NAME}:${BUILD_NUMBER} \
                 ${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
                 '''
-
             }
         }
 
         stage('Push To ECR') {
             steps {
-
                 sh '''
                 docker push \
                 ${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
                 '''
-
             }
         }
 
         stage('Verify Image') {
+
             steps {
 
-                sh '''
-                aws ecr describe-images \
-                --repository-name ${ECR_REPO} \
-                --region ${AWS_REGION}
-                '''
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'aws-creds',
+                        usernameVariable: 'AWS_ACCESS_KEY_ID',
+                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
+                    )
+                ]) {
+
+                    sh '''
+                    aws ecr describe-images \
+                    --repository-name ${ECR_REPO} \
+                    --region ${AWS_REGION}
+                    '''
+                }
             }
         }
     }
@@ -117,7 +121,6 @@ pipeline {
     post {
 
         success {
-
             echo '================================='
             echo 'Pipeline Completed Successfully'
             echo 'Image Pushed To Amazon ECR'
@@ -125,7 +128,6 @@ pipeline {
         }
 
         failure {
-
             echo '================================='
             echo 'Pipeline Failed'
             echo 'Check Console Output'
