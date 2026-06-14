@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DevOps Portfolio</title>
+
+<style>
+body{
+    background:#0f172a;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+    padding-top:100px;
+}
+
+button{
+    padding:15px 25px;
+    font-size:18px;
+    cursor:pointer;
+}
+</style>
+
+</head>
+<body>
+
+<h1>Cloud</h1>
+
+<h2>AWS DevOps Engineer</h2>
+
+<p>
+This website was automatically deployed using
+Jenkins, Docker, SonarQube and AWS ECR.
+</p>
+
+<button onclick="showMessage()">
+Check Deployment Status
+</button>
+
+<p id="status"></p>
+
+<script>
+
+function showMessage(){
+    document.getElementById("status").innerHTML =
+    "✅ Application Successfully Deployed through CI/CD Pipeline";
+}
+
+</script>
+
+</body>
+</html>
