@@ -4,11 +4,11 @@ pipeline {
 
     environment {
 
-        IMAGE_NAME = "devops-portfolio"
+        IMAGE_NAME   = "devops-portfolio"
+        AWS_REGION   = "ap-south-1"
 
-        AWS_REGION = "ap-south-1"
-
-        ECR_REPO = "864899867861.dkr.ecr.ap-south-1.amazonaws.com/devops-portfolio"
+        ECR_REGISTRY = "864899867861.dkr.ecr.ap-south-1.amazonaws.com"
+        ECR_REPO     = "devops-portfolio"
     }
 
     stages {
@@ -21,36 +21,43 @@ pipeline {
 
         stage('Verify Files') {
             steps {
-                sh 'ls -lrt'
+                sh '''
+                pwd
+                ls -lrt
+                '''
             }
         }
 
         stage('SonarQube Scan') {
             steps {
+                script {
 
-                withSonarQubeEnv('sonarqube') {
+                    def scannerHome = tool 'sonar-scanner'
 
-                    sh '''
-                    sonar-scanner \
-                    -Dsonar.projectKey=devops-portfolio \
-                    -Dsonar.sources=. \
-                    '''
+                    withSonarQubeEnv('sonarqube') {
+
+                        sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dsonar.projectKey=devops-portfolio \
+                        -Dsonar.sources=. \
+                        -Dsonar.sourceEncoding=UTF-8
+                        """
+                    }
                 }
             }
         }
 
         stage('Build Docker Image') {
-
             steps {
 
                 sh '''
                 docker build -t ${IMAGE_NAME}:${BUILD_NUMBER} .
                 '''
+
             }
         }
 
         stage('ECR Login') {
-
             steps {
 
                 withCredentials([
@@ -66,24 +73,42 @@ pipeline {
                     --region ${AWS_REGION} | \
                     docker login \
                     --username AWS \
-                    --password-stdin \
-                    ${ECR_REPO}
+                    --password-stdin ${ECR_REGISTRY}
                     '''
                 }
             }
         }
 
-        stage('Push to ECR') {
-
+        stage('Tag Image') {
             steps {
 
                 sh '''
                 docker tag \
                 ${IMAGE_NAME}:${BUILD_NUMBER} \
-                ${ECR_REPO}:${BUILD_NUMBER}
+                ${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
+                '''
 
+            }
+        }
+
+        stage('Push To ECR') {
+            steps {
+
+                sh '''
                 docker push \
-                ${ECR_REPO}:${BUILD_NUMBER}
+                ${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
+                '''
+
+            }
+        }
+
+        stage('Verify Image') {
+            steps {
+
+                sh '''
+                aws ecr describe-images \
+                --repository-name ${ECR_REPO} \
+                --region ${AWS_REGION}
                 '''
             }
         }
@@ -92,11 +117,19 @@ pipeline {
     post {
 
         success {
-            echo 'Image Successfully Uploaded To ECR'
+
+            echo '================================='
+            echo 'Pipeline Completed Successfully'
+            echo 'Image Pushed To Amazon ECR'
+            echo '================================='
         }
 
         failure {
+
+            echo '================================='
             echo 'Pipeline Failed'
+            echo 'Check Console Output'
+            echo '================================='
         }
     }
 }
