@@ -27,9 +27,6 @@ def scannerHome = tool 'sonar-scanner'
 withSonarQubeEnv('sonarqube') {
 sh """
 ${scannerHome}/bin/sonar-scanner
--Dsonar.projectKey=devops-portfolio
--Dsonar.sources=.
--Dsonar.sourceEncoding=UTF-8
 """
 }
 }
