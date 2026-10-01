@@ -58,7 +58,8 @@ docker login --username AWS --password-stdin ${ECR_REGISTRY}
 stage('Tag Image') {
 steps {
 sh '''
-docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
+docker tag ${IMAGE_NAME}:${BUILD_NUMBER} \
+${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
 '''
 }
 }
