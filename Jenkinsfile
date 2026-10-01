@@ -65,8 +65,7 @@ docker tag ${IMAGE_NAME}:${BUILD_NUMBER} ${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUM
 stage('Push To ECR') {
 steps {
 sh '''
-docker push
-${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
+docker push ${ECR_REGISTRY}/${ECR_REPO}:${BUILD_NUMBER}
 '''
 }
 }
@@ -80,9 +79,7 @@ passwordVariable: 'AWS_SECRET_ACCESS_KEY'
 )
 ]) {
 sh '''
-aws ecr describe-images
---repository-name ${ECR_REPO}
---region ${AWS_REGION}
+aws ecr describe-images --repository-name ${ECR_REPO} --region ${AWS_REGION}
 '''
 }
 }
