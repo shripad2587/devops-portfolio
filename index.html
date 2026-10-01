@@ -1,0 +1,180 @@
+#!/bin/bash
+
+yum update -y
+yum install httpd -y
+
+systemctl start httpd
+systemctl enable httpd
+
+cat << 'EOF' > /var/www/html/index.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Cloud</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#f4f6f9;
+transition:0.4s;
+}
+
+header{
+background:#232f3e;
+color:white;
+padding:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+nav a{
+color:white;
+text-decoration:none;
+margin:0 15px;
+font-weight:bold;
+}
+
+nav a:hover{
+color:#ff9900;
+}
+
+.hero{
+text-align:center;
+padding:120px 20px;
+background:linear-gradient(135deg,#1e90ff,#00c6ff);
+color:white;
+}
+
+.hero button{
+padding:15px 30px;
+border:none;
+background:#ff9900;
+color:white;
+font-size:16px;
+border-radius:5px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.hero button:hover{
+transform:scale(1.1);
+background:#ff7700;
+}
+
+.cards{
+display:flex;
+justify-content:center;
+gap:30px;
+padding:60px;
+flex-wrap:wrap;
+}
+
+.card{
+background:white;
+padding:30px;
+width:250px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.1);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-10px);
+box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+footer{
+background:#232f3e;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.dark{
+background:#121212;
+color:white;
+}
+
+.dark .card{
+background:#1e1e1e;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h2>AWS Static Site</h2>
+
+<nav>
+
+<a href="#">Home</a>
+<a href="#services">Services</a>
+<a href="#about">About</a>
+
+</nav>
+
+<button onclick="toggleMode()">🌙</button>
+
+</header>
+
+<section class="hero">
+
+<h1>AWS 🚀 DevOps</h1>
+
+<p>Running on AWS</p>
+
+<button onclick="showMessage()">Test Interaction</button>
+
+</section>
+
+<section id="services" class="cards">
+
+<div class="card">
+<h3>Cloud Hosting</h3>
+<p>AWS EC2 + Apache Web Server</p>
+</div>
+
+<div class="card">
+<h3>Fast Delivery</h3>
+<p>Can integrate CloudFront CDN</p>
+</div>
+
+<div class="card">
+<h3>DevOps Ready</h3>
+<p>CI/CD deployment possible</p>
+</div>
+
+</section>
+
+<footer>
+
+<p>© 2026 AWS </p>
+
+</footer>
+
+<script>
+
+function showMessage(){
+alert("🎉 You are in AWS DevOps Class!");
+}
+
+function toggleMode(){
+document.body.classList.toggle("dark");
+}
+
+</script>
+
+</body>
+</html>
+EOF
