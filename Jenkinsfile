@@ -2,7 +2,7 @@ pipeline {
 agent any
 environment {
 IMAGE_NAME="devops-portfolio"
-AWS_REGION="us-east-1"
+AWS_REGION="ap-south-1"
 ECR_REGISTRY="public.ecr.aws/j0h7e6b5/devops-portfolio"
 ECR_REPO="devops-portfolio"
 }
