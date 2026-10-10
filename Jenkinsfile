@@ -95,14 +95,6 @@ pipeline {
                 }
             }
         }
-
-        stage('RUN') {
-            steps {
-                sh '''
-                    docker run -d
-                '''
-            }
-        }
     }
 
     post {
