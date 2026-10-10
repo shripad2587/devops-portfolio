@@ -96,14 +96,18 @@ pipeline {
             }
         }
 
-                stage('Container Run') {
-            steps {
-                sh '''
-                    docker run -d -p 80:80 --name sai
-                    ${IMAGE_NAME}:${BUILD_NUMBER}
-                '''
-            }
-        }
+stage('Container Run') {
+    steps {
+        sh '''
+            docker rm -f sai || true
+
+            docker run -d \
+                -p 80:80 \
+                --name sai \
+                ${IMAGE_NAME}:${BUILD_NUMBER}
+        '''
+    }
+}
     }
 
     post {
