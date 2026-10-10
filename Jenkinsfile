@@ -95,6 +95,15 @@ pipeline {
                 }
             }
         }
+
+                stage('Container Run') {
+            steps {
+                sh '''
+                    docker run -d -p 80:80 --name sai
+                    ${IMAGE_NAME}:${BUILD_NUMBER}
+                '''
+            }
+        }
     }
 
     post {
