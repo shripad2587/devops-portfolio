@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME   = "devops-portfolio"
-        AWS_REGION   = "ap-south-1"
+        AWS_REGION   = "us-east-1"
         ECR_REGISTRY = "public.ecr.aws/j0h7e6b5/devops-portfolio"
     }
 
@@ -54,8 +54,7 @@ pipeline {
                     )
                 ]) {
                     sh '''
-                        aws ecr-public get-login-password --region ${AWS_REGION} | \
-                        docker login --username AWS --password-stdin public.ecr.aws
+                    aws ecr get-login-password --region ap-south-1 docker login --username AWS --password-stdin 864899867861.dkr.ecr.ap-south-1.amazonaws.com
                     '''
                 }
             }
