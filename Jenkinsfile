@@ -96,6 +96,14 @@ pipeline {
                 }
             }
         }
+        stage('Container Run') {
+            steps {
+                sh '''
+                    docker run -d --name devops-app -p 80:80 IMAGE_URI:TAG
+                '''
+            }
+        }
+
     }
 
     post {
