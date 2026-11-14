@@ -99,7 +99,7 @@ pipeline {
         stage('Container Run') {
             steps {
                 sh '''
-                    docker run -d --name devops-app -p 80:80 Image URI:TAG
+                    docker run -d --name devops-app -p 80:80 Image URI:tag
                 '''
             }
         }
